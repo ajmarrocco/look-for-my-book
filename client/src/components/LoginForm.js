@@ -29,7 +29,7 @@ const LoginForm = () => {
     }
 
     try {
-      const { data } = await createUser({
+      const { data } = await loginUser({
         variables: {...userFormData}
       });
 
