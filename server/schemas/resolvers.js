@@ -43,10 +43,12 @@ const resolvers = {
             if (context.user) {
                 const newSavedBook = await User.findOneAndUpdate(
                         // id may need underscore
-                        { id: context.user_id },
+                        { _id: context.user_id },
                         { $addToSet: { savedBooks: book } },
                         { new: true }
                     );
+
+                console.log(newSavedBook);
         
                 return newSavedBook;
             }
@@ -56,11 +58,13 @@ const resolvers = {
         removeBook: async (parent, { bookId }, context) => {
             if (context.user) {
                 const updatedSavedBooks = await User.findOneAndUpdate(
-                        { id: context.user_id },
+                        { _id: context.user_id },
                         { $pull: { savedBooks: { bookId: bookId } } },
                         { new: true }
                     );
         
+                console.log(updatedSavedBooks);
+
                 return updatedSavedBooks;
             }
         }

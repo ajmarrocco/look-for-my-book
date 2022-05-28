@@ -48,6 +48,7 @@ const SearchBooks = () => {
         authors: book.volumeInfo.authors || ['No author to display'],
         title: book.volumeInfo.title,
         description: book.volumeInfo.description,
+        link: book.volumeInfo.infoLink,
         image: book.volumeInfo.imageLinks?.thumbnail || '',
       }));
 
@@ -62,6 +63,7 @@ const SearchBooks = () => {
   const handleSaveBook = async (bookId) => {
     // find the book in `searchedBooks` state by the matching id
     const bookToSave = searchedBooks.find((book) => book.bookId === bookId);
+    console.log("This is the book to save:" + bookToSave)
 
     // get token
     const token = Auth.loggedIn() ? Auth.getToken() : null;
@@ -73,9 +75,10 @@ const SearchBooks = () => {
     try {
       await saveBook({
         variables: { book: bookToSave },
-        update : bookList => {
-          const {me} = bookList.readQuery({ query: QUERY_ME });
-          bookList.writeQuery({ query: QUERY_ME, data: {me: {...me, savedBooks : [...me.savedBooks, bookToSave] } } });
+        // error message
+        update : cache => {
+          const {me} = cache.readQuery({ query: QUERY_ME });
+          cache.writeQuery({ query: QUERY_ME, data: {me: {...me, savedBooks : [...me.savedBooks, bookToSave] } } });
         }
       })
       

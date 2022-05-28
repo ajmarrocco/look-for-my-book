@@ -23,13 +23,13 @@ const SavedBooks = () => {
     try {
       await deleteBook({
         variables: {bookId:bookId},
-        update : bookList => {
-          const data = bookList.readQuery({ query: QUERY_ME });
+        update : cache => {
+          const data = cache.readQuery({ query: QUERY_ME });
           const userDataList = data.me;
           const savedBooksList = userDataList.savedBooks;
           const updatedBookList = savedBooksList.filter(book => book.bookId !== bookId);
           data.me.SavedBooks = updatedBookList;
-          bookList.writeQuery({ query: QUERY_ME, data: { data : {...data.me.savedBooks } } });
+          cache.writeQuery({ query: QUERY_ME, data: { data : {...data.me.savedBooks } } });
         }
       })
       
